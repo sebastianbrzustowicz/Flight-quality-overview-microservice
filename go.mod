@@ -16,6 +16,7 @@ require (
 	github.com/go-latex/latex v0.0.0-20231108140139-5c1ce85aa4ea // indirect
 	github.com/go-pdf/fpdf v0.9.0 // indirect
 	github.com/go-text/typesetting v0.1.0 // indirect
+	github.com/gocarina/gocsv v0.0.0-20231116093920-b87c2d0e983a // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/jung-kurt/gofpdf v1.16.2 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect

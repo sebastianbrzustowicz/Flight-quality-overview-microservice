@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-
 	"image/color"
 
 	"gonum.org/v1/plot"
@@ -63,12 +62,6 @@ func generateAndSavePlot(arr1, arr2 []float64) (*plot.Plot, error) {
 	}
 	line2.LineStyle.Color = color.RGBA{R: 255, G: 0, B: 0, A: 255}
 	p.Add(line2)
-
-	// Saving plot to file
-	//if err := p.Save(4*vg.Inch, 4*vg.Inch, "graph.png"); err != nil {
-	//	return fmt.Errorf("error during saving file: %v", err)
-	//}
-	//fmt.Println("Plot created successfully and saved to file 'graph.png'.")
 
 	return p, nil
 }
