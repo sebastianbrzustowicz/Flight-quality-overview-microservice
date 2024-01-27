@@ -27,7 +27,7 @@ where "d" suffix stands for "desired".
 The file must be sent to this endpoint for data handling:
 | HTTP method | endpoint | description | request type | response type |
 | -------------- | -------------- | -------------- | -------------- | -------------- |
-| :yellow_circle: POST | /upload-data | get raport about flight data | csv | pdf |
+| :yellow_circle: POST | /upload-data | get raport about flight data | csv file | pdf file |
 
 Example input `data.csv` as `file`:
 ```
