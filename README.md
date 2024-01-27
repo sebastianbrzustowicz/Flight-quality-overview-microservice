@@ -5,12 +5,30 @@ Data refer to flight quality indicators of the quadcopter.
 This data is related to actual orientation of vehicle and its desired values defined in RPY angles.    
 The integral quality indicators are computed and displayed.
 
-## Data format and example data input
+# Dockerization
+
+Follow these simple commands to deploy application.
+Building process:   
+```console
+docker build -t dataraport:go .
+```
+Running in background:
+```console
+docker run --name dataRaportContainer -d -p 8083:8083 dataraport:go
+```
+Now the containerized application should run properly.
+
+## Example outcome
 Data have to be .csv format and columns stands for:    
 | rolld | pitchd | yawd | altituded | roll | pitch | yaw | altitude | isClamp |      
 where "d" suffix stands for "desired".
 
-Example:
+Endpoint for handling data:
+| HTTP method | endpoint | description | request type | response type |
+| -------------- | -------------- | -------------- | -------------- | -------------- |
+| :yellow_circle: POST | /upload-data | get raport about flight data | csv | pdf |
+
+Example input `data.csv` as `file`:
 ```
 0.672918;0.869353;0.904524;0.612349;0.783116;0.545448;0.689145;0.234122;false
 0.760927;0.352051;0.987521;0.310338;0.837838;0.740037;0.193987;0.018544;false
