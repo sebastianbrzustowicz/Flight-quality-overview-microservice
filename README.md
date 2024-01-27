@@ -7,7 +7,8 @@ The integral quality indicators are computed and displayed.
 
 ## Data format and example data input
 Data have to be .csv format and columns stands for:    
-| rolld | pitchd | yawd | roll | pitch | yaw | isClamp |    
+| rolld | pitchd | yawd | altituded | roll | pitch | yaw | altitude | isClamp |      
+where "d" suffix stands for "desired".
 
 Example:
 ```
