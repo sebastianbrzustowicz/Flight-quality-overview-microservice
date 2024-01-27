@@ -1,4 +1,4 @@
-# Data to PDF raport microservice
+# Filght data to PDF raport microservice
 
 The program helps with converting given data from vehicle to raport.    
 Data refer to flight quality indicators of the quadcopter.    
@@ -18,12 +18,13 @@ docker run --name dataRaportContainer -d -p 8083:8083 dataraport:go
 ```
 Now the containerized application should run properly.
 
-## Example outcome
+# Example outcome
 Data have to be .csv format and columns stands for:    
 | rolld | pitchd | yawd | altituded | roll | pitch | yaw | altitude | isClamp |      
 where "d" suffix stands for "desired".
 
-Endpoint for handling data:
+### Endpoint
+The file must be sent to this endpoint for data handling:
 | HTTP method | endpoint | description | request type | response type |
 | -------------- | -------------- | -------------- | -------------- | -------------- |
 | :yellow_circle: POST | /upload-data | get raport about flight data | csv | pdf |
@@ -68,7 +69,7 @@ Example input `data.csv` as `file`:
 
 ```
 
-## Output PDF
+### Output PDF
 
 The result consists of plots and numerical results.
 
@@ -77,10 +78,10 @@ The result consists of plots and numerical results.
   <img src="https://github.com/sebastianbrzustowicz/Data-raport-microservice/assets/66909222/990882d3-83c9-4705-bd5a-fbd77af46f7e" width="390" />
 </p>
 
-## License
+# License
 
 Data-raport-microservice is released under the MIT license.
 
-## Author
+# Author
 
 Sebastian Brzustowicz &lt;Se.Brzustowicz@gmail.com&gt;
