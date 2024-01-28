@@ -3,7 +3,7 @@
 The program helps with converting given CSV data in a specific convention from a vehicle to PDF overview raport.    
 Data refer to flight quality indicators of the quadcopter.    
 This data is related to actual orientation of vehicle and its desired values defined in RPY angles.    
-The integral quality indicators are computed and displayed.
+The quality indicators (RMS and SSE) are computed and displayed.
 
 # Dockerization
 
@@ -76,9 +76,9 @@ Example input:
 The result consists of numerical results and plots.
 
 <p align="center">
-  <img src="https://github.com/sebastianbrzustowicz/Flight-quality-overview-microservice/assets/66909222/def60357-028f-47dc-936d-228869b19b1b" width="260" height="368" />
-  <img src="https://github.com/sebastianbrzustowicz/Flight-quality-overview-microservice/assets/66909222/d0413cd0-345a-4467-9b17-34572b6e99d0" width="260" height="368"  />
-  <img src="https://github.com/sebastianbrzustowicz/Flight-quality-overview-microservice/assets/66909222/58b71d04-645b-4d87-b5b6-c72538fe604a" width="260" height="368"  />
+  <img src="https://github.com/sebastianbrzustowicz/Flight-quality-overview-microservice/assets/66909222/323493fa-1cfb-408b-bda5-b4e0d1d0e03a" width="260" height="368" />
+  <img src="https://github.com/sebastianbrzustowicz/Flight-quality-overview-microservice/assets/66909222/765507c1-a3d3-4f9e-9482-ba86a8945205" width="260" height="368"  />
+  <img src="https://github.com/sebastianbrzustowicz/Flight-quality-overview-microservice/assets/66909222/44dd54bd-703b-4d0f-b14b-8a8ab061780f" width="260" height="368"  />
 </p>
 
 # License
