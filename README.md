@@ -1,6 +1,6 @@
 # Filght data to PDF raport microservice
 
-The program helps with converting given data from vehicle to raport.    
+The program helps with converting given CSV data in a specific convention from a vehicle to PDF overview raport.    
 Data refer to flight quality indicators of the quadcopter.    
 This data is related to actual orientation of vehicle and its desired values defined in RPY angles.    
 The integral quality indicators are computed and displayed.
@@ -18,18 +18,20 @@ docker run --name dataRaportContainer -d -p 8083:8083 dataraport:go
 ```
 Now the containerized application should run properly.
 
-# Example outcome
-Data have to be .csv format and columns stands for:    
-| rolld | pitchd | yawd | altituded | roll | pitch | yaw | altitude | isClamp |      
-where "d" suffix stands for "desired".
-
-### Endpoint
+# Endpoint
 The file must be sent to this endpoint for data handling:
 | HTTP method | endpoint | description | request type | response type |
 | -------------- | -------------- | -------------- | -------------- | -------------- |
 | :yellow_circle: POST | /upload-data | get raport about flight data | csv file | pdf file |
 
-Example input `data.csv` as `file`:
+# Example outcome
+Data have to be .csv format and columns stands for:    
+| rolld | pitchd | yawd | altituded | roll | pitch | yaw | altitude | isClamp |      
+where "d" suffix stands for "desired".
+
+### Input CSV
+
+Example input `data.csv` as `file` keyword:
 ```
 0.672918;0.869353;0.904524;0.612349;0.783116;0.545448;0.689145;0.234122;false
 0.760927;0.352051;0.987521;0.310338;0.837838;0.740037;0.193987;0.018544;false
@@ -71,11 +73,12 @@ Example input `data.csv` as `file`:
 
 ### Output PDF
 
-The result consists of plots and numerical results.
+The result consists of numerical results and plots.
 
 <p align="center">
-  <img src="https://github.com/sebastianbrzustowicz/Data-raport-microservice/assets/66909222/990882d3-83c9-4705-bd5a-fbd77af46f7e" width="390" />
-  <img src="https://github.com/sebastianbrzustowicz/Data-raport-microservice/assets/66909222/990882d3-83c9-4705-bd5a-fbd77af46f7e" width="390" />
+  <img src="https://github.com/sebastianbrzustowicz/Flight-quality-overview-microservice/assets/66909222/def60357-028f-47dc-936d-228869b19b1b" width="320" />
+  <img src="https://github.com/sebastianbrzustowicz/Flight-quality-overview-microservice/assets/66909222/d0413cd0-345a-4467-9b17-34572b6e99d0" width="320" />
+  <img src="https://github.com/sebastianbrzustowicz/Flight-quality-overview-microservice/assets/66909222/58b71d04-645b-4d87-b5b6-c72538fe604a" width="320" />
 </p>
 
 # License
