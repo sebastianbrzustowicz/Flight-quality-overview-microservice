@@ -90,9 +90,6 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	for i := 0; i < len(altituded); i++ {
 		errorAltitude = append(errorAltitude, altituded[i]-altitude[i])
 	}
-	//errorPitch := roll
-	//errorYaw := roll
-	//errorAltitude := roll
 
 	errorRollPlot, err := generateErrorPlot(errorRoll, "Roll_e", "Sample", "Angle error [rad]")
 	if err != nil {
@@ -115,7 +112,25 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := generateAndSavePDF(rollPlot, pitchPlot, yawPlot, altitudePlot, errorRollPlot, errorPitchPlot, errorYawPlot, errorAltitudePlot); err != nil {
+	rollRMS, rmsErr := computeRMS(errorRoll)
+	pitchRMS, rmsErr := computeRMS(errorPitch)
+	yawRMS, rmsErr := computeRMS(errorYaw)
+	altitudeRMS, rmsErr := computeRMS(errorAltitude)
+	rollSSE, sseErr := computeSSE(errorRoll)
+	pitchSSE, sseErr := computeSSE(errorPitch)
+	yawSSE, sseErr := computeSSE(errorYaw)
+	altitudeSSE, sseErr := computeSSE(errorAltitude)
+	if rmsErr != nil {
+		fmt.Println("Error computing RMS:", rmsErr)
+		return
+	}
+	if sseErr != nil {
+		fmt.Println("Error computing SSE:", sseErr)
+		return
+	}
+
+	if err := generateAndSavePDF(rollPlot, pitchPlot, yawPlot, altitudePlot, errorRollPlot, errorPitchPlot, errorYawPlot, errorAltitudePlot,
+		rollRMS, pitchRMS, yawRMS, altitudeRMS, rollSSE, pitchSSE, yawSSE, altitudeSSE); err != nil {
 		fmt.Println("Error:", err)
 	}
 
