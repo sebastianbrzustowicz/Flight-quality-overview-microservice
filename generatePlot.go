@@ -8,7 +8,7 @@ import (
 	"gonum.org/v1/plot/plotter"
 )
 
-func generateAndSavePlot(arr1, arr2 []float64) (*plot.Plot, error) {
+func generateAndSavePlot(arr1, arr2 []float64, legend1, legend2, xlabel, ylabel string) (*plot.Plot, error) {
 
 	if len(arr2) != len(arr1) {
 		return nil, fmt.Errorf("Data is incorrect: different sizes")
@@ -48,7 +48,7 @@ func generateAndSavePlot(arr1, arr2 []float64) (*plot.Plot, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error occured while creating plot: %v", err)
 	}
-	line1.LineStyle.Color = color.RGBA{R: 0, G: 255, B: 0, A: 255}
+	line1.LineStyle.Color = color.RGBA{R: 0, G: 114, B: 189, A: 255}
 	p.Add(line1)
 
 	points2 := make(plotter.XYs, len(resultArray2))
@@ -60,8 +60,24 @@ func generateAndSavePlot(arr1, arr2 []float64) (*plot.Plot, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error occured while creating plot: %v", err)
 	}
-	line2.LineStyle.Color = color.RGBA{R: 255, G: 0, B: 0, A: 255}
+	line2.LineStyle.Color = color.RGBA{R: 217, G: 83, B: 25, A: 255}
 	p.Add(line2)
+
+	// Adding legend (position and value)
+	p.Legend.Top = true
+	p.Legend.Left = false
+	p.Legend.XOffs = 0
+	p.Legend.YOffs = -0.1
+	p.Legend.Add(legend1, line1)
+	p.Legend.Add(legend2, line2)
+
+	// Adding labels
+	p.X.Label.Text = xlabel
+	p.Y.Label.Text = ylabel
+
+	// Title
+	//p.Title.Text = "Roll data"
+	//p.Title.TextStyle.Font.Size = 18
 
 	return p, nil
 }

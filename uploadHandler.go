@@ -10,6 +10,13 @@ import (
 
 func uploadHandler(w http.ResponseWriter, r *http.Request) {
 
+	ip := r.Header.Get("X-Forwarded-For")
+	if ip == "" {
+		ip = r.RemoteAddr
+	}
+
+	fmt.Println("Client IP address:", ip)
+
 	file, _, err := r.FormFile("file")
 	if err != nil {
 		fmt.Println("Error:", err)
@@ -44,22 +51,22 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	// Displaying unused data (sample)
 	fmt.Println("Column 9:", isClamp)
 
-	rollPlot, err := generateAndSavePlot(rolld, roll)
+	rollPlot, err := generateAndSavePlot(rolld, roll, "Roll_d", "Roll", "Sample", "Angle [rad/s]")
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
-	pitchPlot, err := generateAndSavePlot(pitchd, pitch)
+	pitchPlot, err := generateAndSavePlot(pitchd, pitch, "Pitch_d", "Pitch", "Sample", "Angle [rad/s]")
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
-	yawPlot, err := generateAndSavePlot(yawd, yaw)
+	yawPlot, err := generateAndSavePlot(yawd, yaw, "Yaw_d", "Yaw", "Sample", "Angle [rad/s]")
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
-	altitudePlot, err := generateAndSavePlot(altituded, altitude)
+	altitudePlot, err := generateAndSavePlot(altituded, altitude, "Altitude_d", "Altitude", "Sample", "Altitude [m]")
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
