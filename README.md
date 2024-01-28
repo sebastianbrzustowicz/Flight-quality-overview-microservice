@@ -19,10 +19,10 @@ docker run --name dataRaportContainer -d -p 8083:8083 dataraport:go
 Now the containerized application should run properly.
 
 # Endpoint
-The file must be sent to this endpoint for data handling:
+The CSV file must be sent to this endpoint for data handling as `file` keyword:
 | HTTP method | endpoint | description | request type | response type |
 | -------------- | -------------- | -------------- | -------------- | -------------- |
-| :yellow_circle: POST | /upload-data | get raport about flight data | csv file | pdf file |
+| :yellow_circle: POST | /upload-data | get raport about flight data | CSV file | PDF file |
 
 # Example outcome
 Data have to be .csv format and columns stands for:    
@@ -31,7 +31,7 @@ where "d" suffix stands for "desired".
 
 ### Input CSV
 
-Example input `data.csv` as `file` keyword:
+Example input:
 ```
 0.672918;0.869353;0.904524;0.612349;0.783116;0.545448;0.689145;0.234122;false
 0.760927;0.352051;0.987521;0.310338;0.837838;0.740037;0.193987;0.018544;false
