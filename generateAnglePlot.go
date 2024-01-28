@@ -8,7 +8,7 @@ import (
 	"gonum.org/v1/plot/plotter"
 )
 
-func generateAndSavePlot(arr1, arr2 []float64, legend1, legend2, xlabel, ylabel string) (*plot.Plot, error) {
+func generateAnglePlot(arr1, arr2 []float64, legend1, legend2, xlabel, ylabel string) (*plot.Plot, error) {
 
 	if len(arr2) != len(arr1) {
 		return nil, fmt.Errorf("Data is incorrect: different sizes")
@@ -74,6 +74,9 @@ func generateAndSavePlot(arr1, arr2 []float64, legend1, legend2, xlabel, ylabel 
 	// Adding labels
 	p.X.Label.Text = xlabel
 	p.Y.Label.Text = ylabel
+
+	// Adding grid
+	p.Add(plotter.NewGrid())
 
 	// Title
 	//p.Title.Text = "Roll data"

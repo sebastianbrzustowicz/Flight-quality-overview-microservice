@@ -52,28 +52,70 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	// Displaying unused data (sample)
 	//fmt.Println("Column 9:", isClamp)
 
-	rollPlot, err := generateAndSavePlot(rolld, roll, "Roll_d", "Roll", "Sample", "Angle [rad]")
+	rollPlot, err := generateAnglePlot(rolld, roll, "Roll_d", "Roll", "Sample", "Angle [rad]")
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
-	pitchPlot, err := generateAndSavePlot(pitchd, pitch, "Pitch_d", "Pitch", "Sample", "Angle [rad]")
+	pitchPlot, err := generateAnglePlot(pitchd, pitch, "Pitch_d", "Pitch", "Sample", "Angle [rad]")
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
-	yawPlot, err := generateAndSavePlot(yawd, yaw, "Yaw_d", "Yaw", "Sample", "Angle [rad]")
+	yawPlot, err := generateAnglePlot(yawd, yaw, "Yaw_d", "Yaw", "Sample", "Angle [rad]")
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
-	altitudePlot, err := generateAndSavePlot(altituded, altitude, "Altitude_d", "Altitude", "Sample", "Altitude [m]")
+	altitudePlot, err := generateAnglePlot(altituded, altitude, "Altitude_d", "Altitude", "Sample", "Altitude [m]")
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
 
-	if err := generateAndSavePDF(rollPlot, pitchPlot, yawPlot, altitudePlot); err != nil {
+	// Calculating errors
+	var errorRoll []float64
+	for i := 0; i < len(rolld); i++ {
+		errorRoll = append(errorRoll, rolld[i]-roll[i])
+	}
+	var errorPitch []float64
+	for i := 0; i < len(pitchd); i++ {
+		errorPitch = append(errorPitch, pitchd[i]-pitch[i])
+	}
+	var errorYaw []float64
+	for i := 0; i < len(yawd); i++ {
+		errorYaw = append(errorYaw, yawd[i]-yaw[i])
+	}
+	var errorAltitude []float64
+	for i := 0; i < len(altituded); i++ {
+		errorAltitude = append(errorAltitude, altituded[i]-altitude[i])
+	}
+	//errorPitch := roll
+	//errorYaw := roll
+	//errorAltitude := roll
+
+	errorRollPlot, err := generateErrorPlot(errorRoll, "Roll_e", "Sample", "Angle error [rad]")
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	errorPitchPlot, err := generateErrorPlot(errorPitch, "Pitch_e", "Sample", "Angle error [rad]")
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	errorYawPlot, err := generateErrorPlot(errorYaw, "Yaw_e", "Sample", "Angle error [rad]")
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	errorAltitudePlot, err := generateErrorPlot(errorAltitude, "Altitude_e", "Sample", "Altitude error [m]")
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+
+	if err := generateAndSavePDF(rollPlot, pitchPlot, yawPlot, altitudePlot, errorRollPlot, errorPitchPlot, errorYawPlot, errorAltitudePlot); err != nil {
 		fmt.Println("Error:", err)
 	}
 
@@ -90,7 +132,8 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	// Send the modified PDF as response
 	w.Write(pdfContent)
 
-	filesToRemove := []string{"altitudePlot.png", "rollPlot.png", "yawPlot.png", "pitchPlot.png", "Data-report.pdf"}
+	filesToRemove := []string{"altitudePlot.png", "rollPlot.png", "yawPlot.png", "pitchPlot.png",
+		"rollErrorPlot.png", "pitchErrorPlot.png", "yawErrorPlot.png", "altitudeErrorPlot.png", "Data-report.pdf"}
 
 	for _, file := range filesToRemove {
 		err := os.Remove(file)
