@@ -78,9 +78,5 @@ func generateAnglePlot(arr1, arr2 []float64, legend1, legend2, xlabel, ylabel st
 	// Adding grid
 	p.Add(plotter.NewGrid())
 
-	// Title
-	//p.Title.Text = "Roll data"
-	//p.Title.TextStyle.Font.Size = 18
-
 	return p, nil
 }

@@ -55,9 +55,5 @@ func generateErrorPlot(arr1 []float64, legend1, xlabel, ylabel string) (*plot.Pl
 	// Adding grid
 	p.Add(plotter.NewGrid())
 
-	// Title
-	//p.Title.Text = "Roll data"
-	//p.Title.TextStyle.Font.Size = 18
-
 	return p, nil
 }
