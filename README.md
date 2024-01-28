@@ -76,9 +76,9 @@ Example input `data.csv` as `file` keyword:
 The result consists of numerical results and plots.
 
 <p align="center">
-  <img src="https://github.com/sebastianbrzustowicz/Flight-quality-overview-microservice/assets/66909222/def60357-028f-47dc-936d-228869b19b1b" width="280" height="396" />
-  <img src="https://github.com/sebastianbrzustowicz/Flight-quality-overview-microservice/assets/66909222/d0413cd0-345a-4467-9b17-34572b6e99d0" width="280" height="396"  />
-  <img src="https://github.com/sebastianbrzustowicz/Flight-quality-overview-microservice/assets/66909222/58b71d04-645b-4d87-b5b6-c72538fe604a" width="280" height="396"  />
+  <img src="https://github.com/sebastianbrzustowicz/Flight-quality-overview-microservice/assets/66909222/def60357-028f-47dc-936d-228869b19b1b" width="260" height="368" />
+  <img src="https://github.com/sebastianbrzustowicz/Flight-quality-overview-microservice/assets/66909222/d0413cd0-345a-4467-9b17-34572b6e99d0" width="260" height="368"  />
+  <img src="https://github.com/sebastianbrzustowicz/Flight-quality-overview-microservice/assets/66909222/58b71d04-645b-4d87-b5b6-c72538fe604a" width="260" height="368"  />
 </p>
 
 # License
