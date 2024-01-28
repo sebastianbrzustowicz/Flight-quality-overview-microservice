@@ -16,21 +16,33 @@ func generateAndSavePDF(rollPlot, pitchPlot, yawPlot, altitudePlot *plot.Plot) e
 	// Font size
 	pdf.SetFont("times", "B", 14)
 
-	// Title for PDF
-	pdf.Cell(40, 10, "Filght data to PDF raport microservice - plot visualisation")
+	// Title for page
+	pdf.Cell(40, 10, "Filght data to PDF raport microservice - quality indicators")
 	pdf.Ln(10)
 	// Adding variables to PDF
-	//name := "Sebastian Brzustowicz"
-	//title := "Programmer"
-	//email := "me.example@gmail.com"
-	//
-	//pdf.Ln(10) // Dodanie pustego wiersza
+	name := "Sebastian Brzustowicz"
+	email := "Se.Brzustowicz@gmail.com"
+	additionalInfo := "This raport is distributed under MIT licencse."
+
 	pdf.SetFont("times", "B", 10)
-	//pdf.Cell(0, 10, fmt.Sprintf("Name and surname: %s", name))
-	//pdf.Ln(10)
-	//pdf.Cell(0, 10, fmt.Sprintf("Title: %d", title))
-	//pdf.Ln(10)
-	//pdf.Cell(0, 10, fmt.Sprintf("E-mail: %s", email))
+	pdf.Cell(0, 10, fmt.Sprintf("Author: %s", name))
+	pdf.Ln(5)
+	pdf.Cell(0, 10, fmt.Sprintf("E-mail: %s", email))
+	pdf.Ln(5)
+	pdf.Cell(0, 10, fmt.Sprintf("Additional info: %s", additionalInfo))
+
+	// Integral criterion here (todo)
+
+	// New page
+	pdf.AddPage()
+	// Font size
+	pdf.SetFont("times", "B", 14)
+
+	// Title for page
+	pdf.Cell(40, 10, "Filght data to PDF raport microservice - plot visualisation")
+	pdf.Ln(10)
+
+	pdf.SetFont("times", "B", 10)
 
 	pngRollPlot := "rollPlot.png"
 	if err := rollPlot.Save(10*vg.Inch, 3*vg.Inch, pngRollPlot); err != nil {

@@ -48,20 +48,21 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	_ = isClamp
 	// Displaying unused data (sample)
-	fmt.Println("Column 9:", isClamp)
+	//fmt.Println("Column 9:", isClamp)
 
-	rollPlot, err := generateAndSavePlot(rolld, roll, "Roll_d", "Roll", "Sample", "Angle [rad/s]")
+	rollPlot, err := generateAndSavePlot(rolld, roll, "Roll_d", "Roll", "Sample", "Angle [rad]")
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
-	pitchPlot, err := generateAndSavePlot(pitchd, pitch, "Pitch_d", "Pitch", "Sample", "Angle [rad/s]")
+	pitchPlot, err := generateAndSavePlot(pitchd, pitch, "Pitch_d", "Pitch", "Sample", "Angle [rad]")
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
-	yawPlot, err := generateAndSavePlot(yawd, yaw, "Yaw_d", "Yaw", "Sample", "Angle [rad/s]")
+	yawPlot, err := generateAndSavePlot(yawd, yaw, "Yaw_d", "Yaw", "Sample", "Angle [rad]")
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
