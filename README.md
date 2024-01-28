@@ -63,7 +63,7 @@ The result consists of numerical results and plots.
 
 # License
 
-Data-raport-microservice is released under the MIT license.
+Flight-quality-overview-microservice is released under the MIT license.
 
 # Author
 
