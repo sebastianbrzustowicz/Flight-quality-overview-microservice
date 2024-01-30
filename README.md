@@ -24,6 +24,11 @@ The CSV file must be sent to this endpoint for data handling as `file` keyword:
 | -------------- | -------------- | -------------- | -------------- | -------------- |
 | :yellow_circle: POST | /upload-data | get raport about flight data | CSV file | PDF file |
 
+Command for testing:
+```
+curl -X POST -H "Content-Type: multipart/form-data" -F "file=@data.csv" --output Data-report.pdf http://localhost:8083/upload-data
+```
+
 # Example outcome
 Data have to be .csv format and columns stands for:    
 | rolld | pitchd | yawd | altituded | roll | pitch | yaw | altitude | isClamp |      
