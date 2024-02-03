@@ -5,19 +5,6 @@ Data refer to flight quality indicators of the quadcopter.
 This data is related to actual orientation of vehicle and its desired values defined in RPY angles.    
 The quality indicators (RMS and SSE) are computed and displayed, aswell as visualised raw data and control errors.
 
-# Dockerization
-
-Follow these simple commands to deploy application.
-Building process:   
-```console
-docker build -t dataraport:go .
-```
-Running in background:
-```console
-docker run --name dataRaportContainer -d -p 8083:8083 dataraport:go
-```
-Now the containerized application should run properly.
-
 # Endpoint
 The CSV file must be sent to this endpoint for data handling as `file` keyword:
 | HTTP method | endpoint | description | request type | response type |
@@ -65,6 +52,46 @@ The result consists of numerical results and plots.
   <img src="https://github.com/sebastianbrzustowicz/Flight-quality-overview-microservice/assets/66909222/765507c1-a3d3-4f9e-9482-ba86a8945205" width="260" height="368"  />
   <img src="https://github.com/sebastianbrzustowicz/Flight-quality-overview-microservice/assets/66909222/44dd54bd-703b-4d0f-b14b-8a8ab061780f" width="260" height="368"  />
 </p>
+
+# Efficiency
+Golang is known for its goroutines performance.     
+Here is some collected data that shows the superiority of the parallel approach with a limited file size.     
+The results show the program execution time (milliseconds) for single-threaded and parallel versions.    
+(data samples = rows in csv file)
+
+| Data samples | Single-thread | Goroutines |
+|------------|------------|------------|
+| 1000 | 124 | 58 |
+| 2000 | 130 | 62 |
+| 4000 | 145 | 70 |
+| 8000 | 176 | 88 |
+| 16000 | 245 | 117 |
+| 32000 | 335 | 182 |
+| 64000 | 571 | 306 |
+| 128000 | 1025 | 580 |
+| 256000 | 1927 | 1116 |
+| 512000 | 3970 | 2290 |
+| 1024000 | 7584 | 4420 |
+| 2048000 | 14998 | 8800 |
+| 4096000 | 30009 | 17453 |
+| 8192000 | 65727 | 34101 |
+| 16384000 | 121729 | OUT OF RAM |
+
+In this case, goroutines work well up to ~1 GB file size and this depends on the size of RAM used.    
+Until then, goroutines are about 2 times more efficient than the single-thread approach.    
+
+# Dockerization
+
+Follow these simple commands to deploy application.
+Building process:   
+```console
+docker build -t dataraport:go .
+```
+Running in background:
+```console
+docker run --name dataRaportContainer -d -p 8083:8083 dataraport:go
+```
+Now the containerized application should run properly.
 
 # License
 
