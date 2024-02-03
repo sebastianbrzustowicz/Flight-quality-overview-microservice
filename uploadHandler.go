@@ -6,9 +6,15 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"sync"
+	"time"
+
+	"gonum.org/v1/plot"
 )
 
 func uploadHandler(w http.ResponseWriter, r *http.Request) {
+
+	startTime := time.Now()
 
 	ip := r.Header.Get("X-Forwarded-For")
 	if ip == "" {
@@ -52,26 +58,31 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	// Displaying unused data (sample)
 	//fmt.Println("Column 9:", isClamp)
 
-	rollPlot, err := generateAnglePlot(rolld, roll, "Roll_d", "Roll", "Sample", "Angle [rad]")
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
-	}
-	pitchPlot, err := generateAnglePlot(pitchd, pitch, "Pitch_d", "Pitch", "Sample", "Angle [rad]")
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
-	}
-	yawPlot, err := generateAnglePlot(yawd, yaw, "Yaw_d", "Yaw", "Sample", "Angle [rad]")
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
-	}
-	altitudePlot, err := generateAnglePlot(altituded, altitude, "Altitude_d", "Altitude", "Sample", "Altitude [m]")
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
-	}
+	//timeBeforePlots := time.Since(startTime).Microseconds()
+	//fmt.Printf("Time before plots: %v microseconds\n", timeBeforePlots)
+
+	//rollPlotChan := make(chan *plot.Plot)
+	ch1 := make(chan *plot.Plot)
+	ch2 := make(chan *plot.Plot)
+	ch3 := make(chan *plot.Plot)
+	ch4 := make(chan *plot.Plot)
+	var wg sync.WaitGroup
+	wg.Add(4)
+
+	go generateAnglePlot(rolld, roll, "Roll_d", "Roll", "Sample", "Angle [rad]", ch1, &wg)
+	go generateAnglePlot(pitchd, pitch, "Pitch_d", "Pitch", "Sample", "Angle [rad]", ch2, &wg)
+	go generateAnglePlot(yawd, yaw, "Yaw_d", "Yaw", "Sample", "Angle [rad]", ch3, &wg)
+	go generateAnglePlot(altituded, altitude, "Altitude_d", "Altitude", "Sample", "Altitude [m]", ch4, &wg)
+
+	rollPlot, pitchPlot, yawPlot, altitudePlot := <-ch1, <-ch2, <-ch3, <-ch4
+	close(ch1)
+	close(ch2)
+	close(ch3)
+	close(ch4)
+	wg.Wait()
+
+	//timeAfterPlots := time.Since(startTime).Microseconds()
+	//fmt.Printf("Time after plots: %v microseconds\n", timeAfterPlots)
 
 	// Calculating errors
 	var errorRoll []float64
@@ -90,6 +101,9 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	for i := 0; i < len(altituded); i++ {
 		errorAltitude = append(errorAltitude, altituded[i]-altitude[i])
 	}
+
+	//timeBeforeErrorPlots := time.Since(startTime).Microseconds()
+	//fmt.Printf("Time before error plots: %v microseconds\n", timeBeforeErrorPlots)
 
 	errorRollPlot, err := generateErrorPlot(errorRoll, "Roll_e", "Sample", "Angle error [rad]")
 	if err != nil {
@@ -112,6 +126,9 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//timeAfterErrorPlots := time.Since(startTime).Microseconds()
+	//fmt.Printf("Time after error plots: %v microseconds\n", timeAfterErrorPlots)
+
 	rollRMS, rmsErr := computeRMS(errorRoll)
 	pitchRMS, rmsErr := computeRMS(errorPitch)
 	yawRMS, rmsErr := computeRMS(errorYaw)
@@ -129,6 +146,9 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//timeAfterIndicators := time.Since(startTime).Microseconds()
+	//fmt.Printf("Time after indicators: %v microseconds\n", timeAfterIndicators)
+
 	if err := generateAndSavePDF(rollPlot, pitchPlot, yawPlot, altitudePlot, errorRollPlot, errorPitchPlot, errorYawPlot, errorAltitudePlot,
 		rollRMS, pitchRMS, yawRMS, altitudeRMS, rollSSE, pitchSSE, yawSSE, altitudeSSE); err != nil {
 		fmt.Println("Error:", err)
@@ -139,6 +159,9 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error reading PDF content", http.StatusInternalServerError)
 		return
 	}
+
+	//timeAfterPDFGeneration := time.Since(startTime).Microseconds()
+	//fmt.Printf("Time after PDF generation: %v microseconds\n", timeAfterPDFGeneration)
 
 	// Set response headers
 	w.Header().Set("Content-Type", "application/pdf")
@@ -156,4 +179,8 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("Error deleting a file", file, ":", err)
 		}
 	}
+
+	executionTime := time.Since(startTime).Microseconds()
+	fmt.Printf("Execution time: %v microseconds\n", executionTime)
+
 }

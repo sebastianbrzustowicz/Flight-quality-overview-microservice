@@ -4,14 +4,17 @@ import (
 	"fmt"
 	"image/color"
 
+	"sync"
+
 	"gonum.org/v1/plot"
 	"gonum.org/v1/plot/plotter"
 )
 
-func generateAnglePlot(arr1, arr2 []float64, legend1, legend2, xlabel, ylabel string) (*plot.Plot, error) {
+func generateAnglePlot(arr1, arr2 []float64, legend1, legend2, xlabel, ylabel string, ch chan *plot.Plot, wg *sync.WaitGroup) {
+	defer wg.Done()
 
 	if len(arr2) != len(arr1) {
-		return nil, fmt.Errorf("Data is incorrect: different sizes")
+		fmt.Errorf("Data is incorrect: different sizes")
 	}
 
 	length := len(arr1)
@@ -46,7 +49,7 @@ func generateAnglePlot(arr1, arr2 []float64, legend1, legend2, xlabel, ylabel st
 	}
 	line1, err := plotter.NewLine(points)
 	if err != nil {
-		return nil, fmt.Errorf("error occured while creating plot: %v", err)
+		fmt.Errorf("error occured while creating plot: %v", err)
 	}
 	line1.LineStyle.Color = color.RGBA{R: 0, G: 114, B: 189, A: 255}
 	p.Add(line1)
@@ -58,7 +61,7 @@ func generateAnglePlot(arr1, arr2 []float64, legend1, legend2, xlabel, ylabel st
 	}
 	line2, err := plotter.NewLine(points2)
 	if err != nil {
-		return nil, fmt.Errorf("error occured while creating plot: %v", err)
+		fmt.Errorf("error occured while creating plot: %v", err)
 	}
 	line2.LineStyle.Color = color.RGBA{R: 217, G: 83, B: 25, A: 255}
 	p.Add(line2)
@@ -78,5 +81,7 @@ func generateAnglePlot(arr1, arr2 []float64, legend1, legend2, xlabel, ylabel st
 	// Adding grid
 	p.Add(plotter.NewGrid())
 
-	return p, nil
+	//return p, nil
+	ch <- p
+	p = nil
 }

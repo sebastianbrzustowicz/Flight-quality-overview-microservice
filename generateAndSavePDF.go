@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 
+	"sync"
+
 	"github.com/jung-kurt/gofpdf"
 	"gonum.org/v1/plot"
 	"gonum.org/v1/plot/vg"
@@ -10,6 +12,7 @@ import (
 
 func generateAndSavePDF(rollPlot, pitchPlot, yawPlot, altitudePlot, errorRollPlot, errorPitchPlot, errorYawPlot, errorAltitudePlot *plot.Plot,
 	rollRMS, pitchRMS, yawRMS, altitudeRMS, rollSSE, pitchSSE, yawSSE, altitudeSSE string) error {
+
 	// Creating new PDF
 	pdf := gofpdf.New("P", "mm", "A4", "")
 
@@ -134,25 +137,19 @@ func generateAndSavePDF(rollPlot, pitchPlot, yawPlot, altitudePlot, errorRollPlo
 	pdf.SetFont("times", "B", 10)
 	pdf.Ln(10)
 
+	// Goroutines
+	var wg sync.WaitGroup
+
+	wg.Add(4)
 	pngRollPlot := "rollPlot.png"
-	if err := rollPlot.Save(10*vg.Inch, 3*vg.Inch, pngRollPlot); err != nil {
-		return fmt.Errorf("Error when saving plot to PNG: %v", err)
-	}
-
+	go savePlotAsync(rollPlot, pngRollPlot, &wg)
 	pngPitchPlot := "pitchPlot.png"
-	if err := pitchPlot.Save(10*vg.Inch, 3*vg.Inch, pngPitchPlot); err != nil {
-		return fmt.Errorf("Error when saving plot to PNG: %v", err)
-	}
-
+	go savePlotAsync(pitchPlot, pngPitchPlot, &wg)
 	pngYawPlot := "yawPlot.png"
-	if err := yawPlot.Save(10*vg.Inch, 3*vg.Inch, pngYawPlot); err != nil {
-		return fmt.Errorf("Error when saving plot to PNG: %v", err)
-	}
-
+	go savePlotAsync(yawPlot, pngYawPlot, &wg)
 	pngAltitudePlot := "altitudePlot.png"
-	if err := altitudePlot.Save(10*vg.Inch, 3*vg.Inch, pngAltitudePlot); err != nil {
-		return fmt.Errorf("Error when saving plot to PNG: %v", err)
-	}
+	go savePlotAsync(altitudePlot, pngAltitudePlot, &wg)
+	wg.Wait()
 
 	pdf.Ln(10)
 	pdf.Image(pngRollPlot, 10, pdf.GetY(), 190, 50, true, "", 0, "")
@@ -184,22 +181,16 @@ func generateAndSavePDF(rollPlot, pitchPlot, yawPlot, altitudePlot, errorRollPlo
 	pdf.SetFont("times", "B", 10)
 	pdf.Ln(10)
 
+	wg.Add(4)
 	pngRollErrorPlot := "rollErrorPlot.png"
-	if err := errorRollPlot.Save(10*vg.Inch, 3*vg.Inch, pngRollErrorPlot); err != nil {
-		return fmt.Errorf("Error when saving plot to PNG: %v", err)
-	}
+	go saveErrorPlotAsync(errorRollPlot, pngRollErrorPlot, &wg)
 	pngPitchErrorPlot := "pitchErrorPlot.png"
-	if err := errorPitchPlot.Save(10*vg.Inch, 3*vg.Inch, pngPitchErrorPlot); err != nil {
-		return fmt.Errorf("Error when saving plot to PNG: %v", err)
-	}
+	go saveErrorPlotAsync(errorPitchPlot, pngPitchErrorPlot, &wg)
 	pngYawErrorPlot := "yawErrorPlot.png"
-	if err := errorYawPlot.Save(10*vg.Inch, 3*vg.Inch, pngYawErrorPlot); err != nil {
-		return fmt.Errorf("Error when saving plot to PNG: %v", err)
-	}
+	go saveErrorPlotAsync(errorYawPlot, pngYawErrorPlot, &wg)
 	pngAltitudeErrorPlot := "altitudeErrorPlot.png"
-	if err := errorAltitudePlot.Save(10*vg.Inch, 3*vg.Inch, pngAltitudeErrorPlot); err != nil {
-		return fmt.Errorf("Error when saving plot to PNG: %v", err)
-	}
+	go saveErrorPlotAsync(errorAltitudePlot, pngAltitudeErrorPlot, &wg)
+	wg.Wait()
 
 	pdf.Ln(10)
 	pdf.Image(pngRollErrorPlot, 10, pdf.GetY(), 190, 50, true, "", 0, "")
@@ -222,12 +213,27 @@ func generateAndSavePDF(rollPlot, pitchPlot, yawPlot, altitudePlot, errorRollPlo
 	pdf.SetX(pdf.GetX() + float64(xOffsetAltitudeError))
 	pdf.Cell(210, 10, fmt.Sprintf("Fig. 2.4: Altitude error data"))
 
-	// Zapisanie dokumentu do pliku
+	// Saving pdf to file
 	err := pdf.OutputFileAndClose("Data-report.pdf")
 	if err != nil {
 		return fmt.Errorf("Error when saving file to PDF: %v", err)
 	}
 
-	fmt.Println("PDF created successfully.")
 	return nil
+}
+
+func savePlotAsync(plot *plot.Plot, filename string, wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	if err := plot.Save(10*vg.Inch, 3*vg.Inch, filename); err != nil {
+		fmt.Printf("Error when saving plot to PNG (%s): %v\n", filename, err)
+	}
+}
+
+func saveErrorPlotAsync(errorPlot *plot.Plot, filename string, wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	if err := errorPlot.Save(10*vg.Inch, 3*vg.Inch, filename); err != nil {
+		fmt.Printf("Error when saving error plot to PNG (%s): %v\n", filename, err)
+	}
 }
